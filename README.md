@@ -1,3 +1,9 @@
+# TODO:
+## - Add float arrays
+## - Add strings
+## - Add conversion between strings and floats and integers
+## - Write the rest of the documentation
+
 # PlusStack
 Plus Stack is a interpretd langue witten in go.
 
@@ -14,7 +20,7 @@ Here is a code example:
 When running this code the interpreter will first add 10 and 30 to the list of arguments. Secondly, it will execute the plus function with 10 and 30 as arguments. The result will be the integer array [ 40 ]. Finally, the result will then be pushed to the memory stack.
 
 ## Popping the stack
-There are two tokens that pop the stack: "A" and ".". The first poping token, "A", popes all elements in the stack, and "." popes one. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the poped item will be added to the list of arguments.
+There are two tokens that pop the stack: "A" and ".". The first poping token, "A", popes all elements in the stack, and "." popes one. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the poped item will be added to the list of arguments. The A token will always be read as an argument and will therfore be added to the list of arguments.
 
 Here is an example 
 ```
@@ -23,12 +29,14 @@ Here is an example
 Firstly 30 will be added to the list of arguments. Then the element at the top of the stack gets popped. Assuming that this element is an integer array, it would also be added to the list of arguments. Then the two integer arrays will be added and the result pushed onto the stack.
 
 ## Functions
+In Plus Stack functions can also be used as arguments.
 
+### The execution of custom functions
+The arguments passed to the cutom function will be added
 
 ## Function definitons
-
 ### Push ]
-The push function takes arrays or functions. If the arguments are arrays, the arguments will be combined into one array and pushed to the memory stack.
+The push function takes arrays or functions. If the arguments are arrays, the arguments will be combined into one array and pushed to the memory stack. If the arguments are function, all function will be pushed to the memory stack.
 
 ```
 1 12 4 5]
@@ -37,7 +45,7 @@ Output:
 0) [ 1 12 4 5 ]
 ```
 
-### Plus +
+### Plus (+)
 If the plus function receives one integer array, the function will for every integer in the array push a new array with the length of the integer. 
 ```
 2 3 1]
@@ -59,7 +67,7 @@ Output:
 0) [ 4 4 4 ]
 ```
 
-If the function receives some  
+If the function receives one or more arrays with lenght one and one ore more with a lenght longer than one, all the arrays with lenght one will be added togheter and then that value will be added to all the elements in the arrays with lenght over one.
 
 ```
 0 0 0]
@@ -70,18 +78,42 @@ Output:
 0) [ 7 7 7 7 ] 
 1) [ 6 6 6 ]
 ```
+Two arrays are added to the stak and 6 is added to all of them.
 
-### Minus -
+### Minus (-)
+Minus works in the same way as plus, but has with a differetn diefintion for one int array. For one int array the function will return the negative of every element. For some int arrays with lenght one and some with lenght longer than one, the arrays with lenght longer than one will be minused the combination of the ones with lenght over one.
 
-### Multiplication * (Not implemended)
-### Division : (Not implemended)
+```
+10-
 
-### Reduce /
+Ouput:
+0) [ -10 ]
+```
 
-### Delete D
-Takes any input and does nothing
+```
+50 10-
 
-### Map
+Output
+0) [ 40 ]
+```
+
+```
+10+ 10 .+ . 5-
+
+Output:
+0) [ 5 5 5 5 5 5 5 5 5 5 ]
+```
+
+### Multiplication (*) (Not implemended)
+### Division (:) (Not implemended)
+
+### Reduce (/)
+
+### Delete (D)
+Takes any input and does nothing.
+
+### Map (-<)
+
 
 
 ### Ternary (?)
