@@ -2,6 +2,9 @@
 ## - Add float arrays
 ## - Add strings
 ## - Add conversion between strings and floats and integers
+## - Add definitions for multipication and divison
+## - Add user input
+## - Add file reading and writing
 ## - Write the rest of the documentation
 
 # PlusStack
