@@ -1,14 +1,11 @@
 # TODO:
-## - Add float arrays
-## - Add strings
-## - Add conversion between strings and floats and integers
-## - Add definitions for multipication and divison
+## - Add boolean functions
 ## - Add user input
 ## - Add file reading and writing
 ## - Write the rest of the documentation
 
 # PlusStack
-Plus Stack is a interpretd langue witten in go.
+Plus Stack is a interpreted langue written in go.
 
 ## Memory in Plus Stack
 The only form of memory available in Plus Stack is a stack. The stack can contain two data types: Integer arrays and functions.
@@ -23,7 +20,7 @@ Here is a code example:
 When running this code the interpreter will first add 10 and 30 to the list of arguments. Secondly, it will execute the plus function with 10 and 30 as arguments. The result will be the integer array [ 40 ]. Finally, the result will then be pushed to the memory stack.
 
 ## Popping the stack
-There are two tokens that pop the stack: "A" and ".". The first poping token, "A", popes all elements in the stack, and "." popes one. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the poped item will be added to the list of arguments. The A token will always be read as an argument and will therfore be added to the list of arguments.
+There are two tokens that pop the stack: "A" and ".". The first poping token, "A", popes all elements in the stack, and "." popes one. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the poped item will be added to the list of arguments. The A token will always be read as an argument and will therefore be added to the list of arguments.
 
 Here is an example 
 ```
@@ -35,9 +32,9 @@ Firstly 30 will be added to the list of arguments. Then the element at the top o
 In Plus Stack functions can also be used as arguments.
 
 ### The execution of custom functions
-The arguments passed to the cutom function will be added
+The arguments passed to the custom function will be added
 
-## Function definitons
+## Function definitions
 ### Push ]
 The push function takes arrays or functions. If the arguments are arrays, the arguments will be combined into one array and pushed to the memory stack. If the arguments are function, all function will be pushed to the memory stack.
 
@@ -70,7 +67,7 @@ Output:
 0) [ 4 4 4 ]
 ```
 
-If the function receives one or more arrays with lenght one and one ore more with a lenght longer than one, all the arrays with lenght one will be added togheter and then that value will be added to all the elements in the arrays with lenght over one.
+If the function receives one or more arrays with length one and one ore more with a length longer than one, all the arrays with length one will be added together and then that value will be added to all the elements in the arrays with length over one.
 
 ```
 0 0 0]
@@ -81,15 +78,15 @@ Output:
 0) [ 7 7 7 7 ] 
 1) [ 6 6 6 ]
 ```
-Two arrays are added to the stak and 6 is added to all of them.
+Two arrays are added to the stack and 6 is added to all of them.
 
 ### Minus (-)
-Minus works in the same way as plus, but has with a differetn diefintion for one int array. For one int array the function will return the negative of every element. For some int arrays with lenght one and some with lenght longer than one, the arrays with lenght longer than one will be minused the combination of the ones with lenght over one.
+Minus works in the same way as plus, but has with a different definition for one int array. For one int array the function will return the negative of every element. For some int arrays with length one and some with length longer than one, the arrays with length longer than one will be minus the combination of the ones with length one.
 
 ```
 10-
 
-Ouput:
+Output:
 0) [ -10 ]
 ```
 
@@ -107,8 +104,32 @@ Output:
 0) [ 5 5 5 5 5 5 5 5 5 5 ]
 ```
 
-### Multiplication (*) (Not implemended)
-### Division (:) (Not implemended)
+### Multiplication (*)
+Works the same way as plus and minus, but has no definition for one integer array.
+
+```
+10 10*
+
+Output:
+0) [ 100 ]
+```
+
+### Division (:) 
+Works the same way as plus and minus, but has no definition for one integer array.
+
+```
+10 10:
+
+Output:
+0) [ 1 ]
+```
+
+```
+10 20 26] .2:
+
+Output:
+0) [ 5 10 13 ]
+```
 
 ### Reduce (/)
 

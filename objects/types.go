@@ -1,7 +1,10 @@
 package objects
 
 const (
-	INT       = "INT"
-	INT_ARRAY = "INT_ARRAY"
-	FUNCTION  = "FUNCTION"
+	INT         = "INT"
+	FLOAT       = "FLOAT"
+	INT_ARRAY   = "INT_ARRAY"
+	FLOAT_ARRAY = "FLOAT_ARRAY"
+	STRING      = "STRING"
+	FUNCTION    = "FUNCTION"
 )

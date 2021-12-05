@@ -6,10 +6,10 @@ import (
 )
 
 func appendIntArray(arguments []objects.Object) ([]objects.Object, error) {
-	outputObject := objects.NewIntArray(make([]int, 0))
+	outputObject := objects.NewNumberArray(make([]float64, 0))
 
 	for i := 0; i < len(arguments); i++ {
-		curIntArray, ok := arguments[i].(objects.IntArray)
+		curIntArray, ok := arguments[i].(objects.NumberArray)
 		if !ok {
 			return arguments, fmt.Errorf("Argument given to append not of type intArray")
 		}
@@ -21,5 +21,9 @@ func appendIntArray(arguments []objects.Object) ([]objects.Object, error) {
 }
 
 func appendFunction(arguments []objects.Object) ([]objects.Object, error) {
+	return arguments, nil
+}
+
+func appendString(arguments []objects.Object) ([]objects.Object, error) {
 	return arguments, nil
 }

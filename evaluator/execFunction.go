@@ -16,17 +16,23 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 	case regexp.MustCompile(tokens.NONE).MatchString(functionInString):
 		return nilFunction, nil
 
+	case regexp.MustCompile("\\A" + tokens.TO_NUM).MatchString(functionInString):
+		return toNum, nil
+
+	case regexp.MustCompile("\\A" + tokens.TO_STRING).MatchString(functionInString):
+		return toString, nil
+
 	//Matches for "+"
-	case regexp.MustCompile("\\" + tokens.PLUSS + "\\z").MatchString(functionInString):
-		return pluss, nil
+	case regexp.MustCompile("\\" + tokens.PLUS + "\\z").MatchString(functionInString):
+		return plus, nil
 
 	//Matches for "+" with one "INT_ARRAY"
-	case regexp.MustCompile("\\" + tokens.PLUSS + objects.INT_ARRAY + "\\z").MatchString(functionInString):
+	case regexp.MustCompile("\\" + tokens.PLUS + objects.INT_ARRAY + "\\z").MatchString(functionInString):
 		return plussOneIntArray, nil
 
 	//Matches for "+" with one or more "INT_ARRAY"
-	case regexp.MustCompile("\\" + tokens.PLUSS + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
-		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 + i2 }), nil
+	case regexp.MustCompile("\\" + tokens.PLUS + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return arithmeticMultipleIntArrays(func(i1, i2 float64) float64 { return i1 + i2 }), nil
 
 	//Matches for "-" with one "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.MINUS + objects.INT_ARRAY + "\\z").MatchString(functionInString):
@@ -34,19 +40,23 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 
 	//Matches for "-" with one or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.MINUS + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
-		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 - i2 }), nil
+		return arithmeticMultipleIntArrays(func(i1, i2 float64) float64 { return i1 - i2 }), nil
 
 	//Matches for "*" with one or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.MULT + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
-		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 * i2 }), nil
+		return arithmeticMultipleIntArrays(func(i1, i2 float64) float64 { return i1 * i2 }), nil
 
 	//Matches for ":" with one or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.DIV + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
-		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 / i2 }), nil
+		return arithmeticMultipleIntArrays(func(i1, i2 float64) float64 { return i1 / i2 }), nil
 
 	//Matches for ] with zero or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return appendIntArray, nil
+
+	//Matches for ] with zero or more "STRING"
+	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.STRING + ")+").MatchString(functionInString):
+		return appendString, nil
 
 	//Matches for ] with zero or more "FUNCTION"
 	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.FUNCTION + ")+").MatchString(functionInString):
@@ -71,7 +81,7 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 		return mapFunction, nil
 	}
 
-	return nilFunction, errors.New("Function " + function + " is not defiend for arguments given: " + arguments)
+	return nilFunction, errors.New("Function " + function + " is not defined for arguments given: " + arguments)
 }
 
 func nilFunction(arguments []objects.Object) ([]objects.Object, error) {
@@ -93,9 +103,6 @@ func execFunction(functionName string, arguments []objects.Object) ([]objects.Ob
 }
 
 func execCustomFunction(functionDef string, arguments []objects.Object) []objects.Object {
-	//TODO: cheack if function has points before first function
-
-	//functionDef = "A" + functionDef
 	eval := New()
 	eval.stack = arrayStack.New(arguments...)
 	eval.Eval(functionDef)
@@ -103,9 +110,9 @@ func execCustomFunction(functionDef string, arguments []objects.Object) []object
 }
 
 /*
-What pluss (+) function does:
+What plus (+) function does:
 +				Push new array with 1 element.
-+Array			For each of the elements in the array push new array with the same lenght as the element.
++Array			For each of the elements in the array push new array with the same length as the element.
 +Array...		Add two arrays and push result.
 
 What minus (-) function does:

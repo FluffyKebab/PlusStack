@@ -1,7 +1,7 @@
 package objects
 
 import (
-	"fmt"
+	"strconv"
 )
 
 type Object interface {
@@ -9,40 +9,35 @@ type Object interface {
 	ToString() string
 }
 
-type Integer struct {
-	Value int
+type NumberArray struct {
+	Elements []float64
 }
 
-func (i Integer) Type() string     { return INT }
-func (i Integer) ToString() string { return fmt.Sprintf("%d", i.Value) }
-
-func NewInt(i int) Object {
-	return Integer{
-		Value: i,
-	}
-}
-
-type IntArray struct {
-	Elements []Integer
-}
-
-func (a IntArray) Type() string { return INT_ARRAY }
-func (a IntArray) ToString() string {
+func (a NumberArray) Type() string { return INT_ARRAY }
+func (a NumberArray) ToString() string {
 	output := ""
 	for i := 0; i < len(a.Elements); i++ {
-		output += a.Elements[i].ToString() + " "
+		output += strconv.FormatFloat(a.Elements[i], 'f', -1, 64) + " "
 	}
 	return output
 }
 
-func NewIntArray(elements []int) IntArray {
-	intArrayElem := make([]Integer, len(elements))
-	for i := 0; i < len(intArrayElem); i++ {
-		intArrayElem[i] = Integer{Value: elements[i]}
+func NewNumberArray(elements []float64) NumberArray {
+	return NumberArray{
+		Elements: elements,
 	}
+}
 
-	return IntArray{
-		Elements: intArrayElem,
+type String struct {
+	Elements []rune
+}
+
+func (s String) Type() string     { return STRING }
+func (s String) ToString() string { return string(s.Elements) }
+
+func NewString(s string) String {
+	return String{
+		Elements: []rune(s),
 	}
 }
 

@@ -18,7 +18,7 @@ func (stack *ArrayStack) Push(newItems ...objects.Object) {
 
 func (stack *ArrayStack) Pop() (objects.Object, error) {
 	if len(stack.Items) == 0 {
-		return objects.NewIntArray(make([]int, 0)), errors.New("Unable to pop stack with 0 items")
+		return objects.NewNumberArray(make([]float64, 0)), errors.New("Unable to pop stack with 0 items")
 	}
 
 	item := stack.Items[len(stack.Items)-1]
@@ -43,14 +43,17 @@ func (stack *ArrayStack) ToString() string {
 	output := ""
 
 	for i := len(stack.Items) - 1; i >= 0; i-- {
-		_, objectIsArray := stack.Items[i].(objects.IntArray)
+		_, objectIsArray := stack.Items[i].(objects.NumberArray)
 		_, objectIsFunction := stack.Items[i].(objects.Function)
+		_, objectIsString := stack.Items[i].(objects.String)
 		curStackPos := fmt.Sprint(len(stack.Items)-i-1) + ") "
 
 		if objectIsArray {
-			output += fmt.Sprint(curStackPos + "[ " + stack.Items[i].ToString() + "]")
+			output += curStackPos + "[ " + stack.Items[i].ToString() + "]"
 		} else if objectIsFunction {
-			output += fmt.Sprint(curStackPos + "Function " + stack.Items[i].ToString())
+			output += curStackPos + "Function " + stack.Items[i].ToString()
+		} else if objectIsString {
+			output += curStackPos + "\"" + stack.Items[i].ToString() + "\""
 		}
 
 		if i != 0 {

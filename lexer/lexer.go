@@ -24,10 +24,14 @@ func (l *Lexer) NextToken() tokens.Token {
 	var tok tokens.Token
 
 	switch true {
+	case l.tokenIs(tokens.TO_STRING):
+		tok = l.newToken(tokens.TO_STRING, tokens.TO_STRING, tokens.FUNCTION)
+	case l.tokenIs(tokens.TO_NUM):
+		tok = l.newToken(tokens.TO_NUM, tokens.TO_NUM, tokens.FUNCTION)
 	case l.tokenIs(tokens.MAP):
 		tok = l.newToken(tokens.MAP, tokens.MAP, tokens.FUNCTION)
-	case l.tokenIs(tokens.PLUSS):
-		tok = l.newToken(tokens.PLUSS, tokens.PLUSS, tokens.FUNCTION)
+	case l.tokenIs(tokens.PLUS):
+		tok = l.newToken(tokens.PLUS, tokens.PLUS, tokens.FUNCTION)
 		break
 	case l.tokenIs(tokens.MINUS):
 		tok = l.newToken(tokens.MINUS, tokens.MINUS, tokens.FUNCTION)
@@ -62,6 +66,8 @@ func (l *Lexer) NextToken() tokens.Token {
 	case l.tokenIs(tokens.POP_ALL):
 		tok = l.newToken(tokens.POP_ALL, tokens.POP_ALL, tokens.ARGUMENT)
 		break
+	case l.tokenIs("\""):
+		tok = l.readString()
 	case l.tokenIsInt():
 		tok = l.readNumber()
 		break
@@ -104,13 +110,49 @@ func (l *Lexer) tokenIsInt() bool {
 	return unicode.IsDigit(l.getCurChar())
 }
 
+func (l *Lexer) readString() tokens.Token {
+	l.readPosition++
+	stringLiteral := ""
+
+	for {
+		curChar := l.getCurChar()
+		l.readPosition++
+
+		if curChar == 0 || curChar == '"' {
+			break
+		}
+
+		stringLiteral += string(curChar)
+	}
+
+	return tokens.New(tokens.STRING, stringLiteral, tokens.ARGUMENT)
+}
+
 func (l *Lexer) readNumber() tokens.Token {
-	position := l.readPosition
-	for unicode.IsDigit(l.getCurChar()) {
+	numberLiteral := ""
+	numberType := tokens.INT
+
+	for {
+		if l.getCurChar() == ',' {
+			l.readPosition++
+			if numberType == tokens.FLOAT {
+				continue
+			}
+
+			numberLiteral += "."
+			numberType = tokens.FLOAT
+			continue
+		}
+
+		if !unicode.IsDigit(l.getCurChar()) {
+			break
+		}
+
+		numberLiteral += string(l.getCurChar())
 		l.readPosition++
 	}
 
-	return tokens.New(tokens.INT, string(l.input[position:l.readPosition]), tokens.ARGUMENT)
+	return tokens.New(tokens.TokenType(numberType), numberLiteral, tokens.ARGUMENT)
 }
 
 func (l *Lexer) readFunction() tokens.Token {

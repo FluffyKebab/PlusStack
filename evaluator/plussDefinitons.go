@@ -7,14 +7,14 @@ import (
 	"sort"
 )
 
-func pluss(arguments []objects.Object) ([]objects.Object, error) {
+func plus(arguments []objects.Object) ([]objects.Object, error) {
 	if len(arguments) != 0 {
-		return arguments, errors.New("Internal interpreter error: Wrong number of arguments passed to pluss function")
+		return arguments, errors.New("Internal interpreter error: Wrong number of arguments passed to plus function")
 	}
 
-	output := make([]int, 1)
+	output := make([]float64, 1)
 	output[0] = 0
-	return []objects.Object{objects.NewIntArray(output)}, nil
+	return []objects.Object{objects.NewNumberArray(output)}, nil
 }
 
 func plussOneIntArray(arguments []objects.Object) ([]objects.Object, error) {
@@ -22,22 +22,22 @@ func plussOneIntArray(arguments []objects.Object) ([]objects.Object, error) {
 		return arguments, errors.New("Internal interpreter error: Wrong number of arguments passed to plussOneIntArray function")
 	}
 
-	inputArray, ok := arguments[0].(objects.IntArray)
+	inputArray, ok := arguments[0].(objects.NumberArray)
 	if !ok {
 		return arguments, errors.New("Internal interpreter error: Argument given to plussOneIntArray not of type intArray")
 	}
 
-	ouputObjects := make([]objects.Object, 0)
+	outputObjects := make([]objects.Object, 0)
 
 	for i := 0; i < len(inputArray.Elements); i++ {
-		curArray := make([]int, inputArray.Elements[i].Value)
+		curArray := make([]float64, int(inputArray.Elements[i]))
 		for i := 0; i < len(curArray); i++ {
 			curArray[i] = 0
 		}
 
-		ouputObjects = append(ouputObjects, objects.NewIntArray(curArray))
+		outputObjects = append(outputObjects, objects.NewNumberArray(curArray))
 	}
-	return ouputObjects, nil
+	return outputObjects, nil
 }
 
 func negative(arguments []objects.Object) ([]objects.Object, error) {
@@ -45,27 +45,27 @@ func negative(arguments []objects.Object) ([]objects.Object, error) {
 		return arguments, errors.New("Negative needs one argument")
 	}
 
-	integerArray, ok := arguments[0].(objects.IntArray)
+	integerArray, ok := arguments[0].(objects.NumberArray)
 	if !ok {
 		return arguments, errors.New("Negative argument have to be of type int array")
 	}
 
-	output := make([]int, 0)
+	output := make([]float64, 0)
 	for i := 0; i < len(integerArray.Elements); i++ {
-		output = append(output, -integerArray.Elements[i].Value)
+		output = append(output, -integerArray.Elements[i])
 	}
 
-	return []objects.Object{objects.NewIntArray(output)}, nil
+	return []objects.Object{objects.NewNumberArray(output)}, nil
 }
 
-func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(arguments []objects.Object) ([]objects.Object, error) {
+func arithmeticMultipleIntArrays(arithmeticFunc func(float64, float64) float64) func(arguments []objects.Object) ([]objects.Object, error) {
 	return func(arguments []objects.Object) ([]objects.Object, error) {
-		inputArrays := make([]objects.IntArray, len(arguments))
+		inputArrays := make([]objects.NumberArray, len(arguments))
 		for i := 0; i < len(inputArrays); i++ {
-			curIntArray, ok := arguments[i].(objects.IntArray)
+			curIntArray, ok := arguments[i].(objects.NumberArray)
 			inputArrays[i] = curIntArray
 			if !ok {
-				return arguments, errors.New("Internal interpreter error: Argument given to arithmeticMulitpleIntArrays at pos " + fmt.Sprint(i) + " not of type intArray")
+				return arguments, errors.New("Internal interpreter error: Argument given to arithmeticMultipleIntArrays at pos " + fmt.Sprint(i) + " not of type intArray")
 			}
 		}
 
@@ -78,12 +78,12 @@ func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(argumen
 		}
 
 		if lenEqual {
-			outputArray := make([]int, len(inputArrays[0].Elements))
+			outputArray := make([]float64, len(inputArrays[0].Elements))
 
 			for i := 0; i < len(inputArrays); i++ {
 				if i == 0 {
 					for j := 0; j < len(inputArrays[0].Elements); j++ {
-						outputArray[j] = inputArrays[i].Elements[j].Value
+						outputArray[j] = inputArrays[i].Elements[j]
 					}
 					continue
 				}
@@ -91,11 +91,11 @@ func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(argumen
 				// 200 10 10
 
 				for j := 0; j < len(inputArrays[0].Elements); j++ {
-					outputArray[j] = arithmeticFunc(outputArray[j], inputArrays[i].Elements[j].Value)
+					outputArray[j] = arithmeticFunc(outputArray[j], inputArrays[i].Elements[j])
 				}
 			}
 
-			return []objects.Object{objects.NewIntArray(outputArray)}, nil
+			return []objects.Object{objects.NewNumberArray(outputArray)}, nil
 		}
 
 		sort.SliceStable(inputArrays, func(i, j int) bool {
@@ -108,19 +108,19 @@ func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(argumen
 
 		outputArrays := make([]objects.Object, 0)
 
-		plussConstant := 0
+		plusConstant := 0.0
 		for i := 0; i < len(inputArrays); i++ {
 			if len(inputArrays[i].Elements) == 1 {
-				plussConstant += inputArrays[i].Elements[0].Value
+				plusConstant += inputArrays[i].Elements[0]
 				continue
 			}
 
-			curOutputArray := make([]int, 0)
+			curOutputArray := make([]float64, 0)
 			for j := 0; j < len(inputArrays[i].Elements); j++ {
-				curOutputArray = append(curOutputArray, arithmeticFunc(inputArrays[i].Elements[j].Value, plussConstant))
+				curOutputArray = append(curOutputArray, arithmeticFunc(inputArrays[i].Elements[j], plusConstant))
 			}
 
-			outputArrays = append(outputArrays, objects.NewIntArray(curOutputArray))
+			outputArrays = append(outputArrays, objects.NewNumberArray(curOutputArray))
 		}
 
 		return outputArrays, nil

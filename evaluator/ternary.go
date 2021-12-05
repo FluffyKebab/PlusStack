@@ -10,7 +10,7 @@ func ternary(arguments []objects.Object) ([]objects.Object, error) {
 		return arguments, errors.New("The ternary function need three arguments")
 	}
 
-	intArray, ok := arguments[0].(objects.IntArray)
+	intArray, ok := arguments[0].(objects.NumberArray)
 	if !ok {
 		return arguments, errors.New("Argument given to the ternary function (?) at pos 0 not of type intArray")
 	}
@@ -19,8 +19,8 @@ func ternary(arguments []objects.Object) ([]objects.Object, error) {
 		return arguments, errors.New("Argument given to the ternary function (?) at pos 0 does not have a lenght of 1")
 	}
 
-	boleanValue := intArray.Elements[0].Value
-	if boleanValue != 0 && boleanValue != 1 {
+	booleanValue := intArray.Elements[0]
+	if booleanValue != 0 && booleanValue != 1 {
 		return arguments, errors.New("Argument given to the ternary function (?) at pos 0 not a bolean value (1 or 0)")
 	}
 
@@ -34,7 +34,7 @@ func ternary(arguments []objects.Object) ([]objects.Object, error) {
 		return arguments, errors.New("Argument given to the ternary function (?) at pos 2 not of type function")
 	}
 
-	if boleanValue == 1 {
+	if booleanValue == 1 {
 		return []objects.Object{function1}, nil
 	}
 

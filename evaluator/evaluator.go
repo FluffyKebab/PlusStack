@@ -36,7 +36,7 @@ func (e *evaluator) Eval(input string) error {
 		}
 
 		if curToken.Type == tokens.ILLEGAL {
-			return fmt.Errorf("Token %s is iligal", curToken.Literal)
+			return fmt.Errorf("Token %s is illegal", curToken.Literal)
 		}
 
 		if curToken.Role == tokens.FUNCTION {
@@ -51,34 +51,46 @@ func (e *evaluator) Eval(input string) error {
 		}
 
 		if curToken.Literal == tokens.POP && e.stack.GetObjectTypeAtPos(0) == tokens.FUNCTION {
-			popedItem, err := e.stack.Pop()
+			poppedItem, err := e.stack.Pop()
 			if err != nil {
 				return err
 			}
 
-			functionDef := popedItem.(objects.Function).FunctionDef
+			functionDef := poppedItem.(objects.Function).FunctionDef
 			e.stack.Push(execCustomFunction(functionDef, e.selectedArguments)...)
 			continue
 		}
 
 		if curToken.Role == tokens.ARGUMENT {
-			//e.selectedArguments = append(e.selectedArguments, curToken)
 			if curToken.Type == tokens.INT {
 				curArgument, err := strconv.Atoi(curToken.Literal)
 				if err != nil {
 					return err
 				}
 
-				e.selectedArguments = append(e.selectedArguments, objects.NewIntArray([]int{curArgument}))
+				e.selectedArguments = append(e.selectedArguments, objects.NewNumberArray([]float64{float64(curArgument)}))
 			}
 
-			if curToken.Type == tokens.POP {
-				popedItem, err := e.stack.Pop()
+			if curToken.Type == tokens.FLOAT {
+				curArgument, err := strconv.ParseFloat(curToken.Literal, 64)
 				if err != nil {
 					return err
 				}
 
-				e.selectedArguments = append(e.selectedArguments, popedItem)
+				e.selectedArguments = append(e.selectedArguments, objects.NewNumberArray([]float64{curArgument}))
+			}
+
+			if curToken.Type == tokens.STRING {
+				e.selectedArguments = append(e.selectedArguments, objects.NewString(curToken.Literal))
+			}
+
+			if curToken.Type == tokens.POP {
+				poppedItem, err := e.stack.Pop()
+				if err != nil {
+					return err
+				}
+
+				e.selectedArguments = append(e.selectedArguments, poppedItem)
 			}
 
 			if curToken.Type == tokens.POP_ALL {
@@ -100,12 +112,12 @@ func (e *evaluator) evalCurFunction() error {
 	functionLiteral := e.selectedFunction.FunctionDef
 
 	if e.selectedFunction.FunctionDef == tokens.POP {
-		popedFunction, err := e.stack.Pop()
+		poppedFunction, err := e.stack.Pop()
 		if err != nil {
 			return err
 		}
 
-		functionLiteral = popedFunction.ToString()
+		functionLiteral = poppedFunction.ToString()
 	}
 
 	returnValue, err := execFunction(functionLiteral, e.selectedArguments)
