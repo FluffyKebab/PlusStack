@@ -35,6 +35,8 @@ const (
 
 	PLUSS   = "+"
 	MINUS   = "-"
+	MULT    = "*"
+	DIV     = ":"
 	APPEND  = "]"
 	REDUCE  = "/"
 	SWAP    = "S"

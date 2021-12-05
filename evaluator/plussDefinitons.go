@@ -40,6 +40,24 @@ func plussOneIntArray(arguments []objects.Object) ([]objects.Object, error) {
 	return ouputObjects, nil
 }
 
+func negative(arguments []objects.Object) ([]objects.Object, error) {
+	if len(arguments) != 1 {
+		return arguments, errors.New("Negative needs one argument")
+	}
+
+	integerArray, ok := arguments[0].(objects.IntArray)
+	if !ok {
+		return arguments, errors.New("Negative argument have to be of type int array")
+	}
+
+	output := make([]int, 0)
+	for i := 0; i < len(integerArray.Elements); i++ {
+		output = append(output, -integerArray.Elements[i].Value)
+	}
+
+	return []objects.Object{objects.NewIntArray(output)}, nil
+}
+
 func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(arguments []objects.Object) ([]objects.Object, error) {
 	return func(arguments []objects.Object) ([]objects.Object, error) {
 		inputArrays := make([]objects.IntArray, len(arguments))
@@ -99,7 +117,7 @@ func arithmeticMulitpleIntArrays(arithmeticFunc func(int, int) int) func(argumen
 
 			curOutputArray := make([]int, 0)
 			for j := 0; j < len(inputArrays[i].Elements); j++ {
-				curOutputArray = append(curOutputArray, arithmeticFunc(plussConstant, inputArrays[i].Elements[j].Value))
+				curOutputArray = append(curOutputArray, arithmeticFunc(inputArrays[i].Elements[j].Value, plussConstant))
 			}
 
 			outputArrays = append(outputArrays, objects.NewIntArray(curOutputArray))

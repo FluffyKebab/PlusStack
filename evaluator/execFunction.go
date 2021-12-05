@@ -28,15 +28,27 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 	case regexp.MustCompile("\\" + tokens.PLUSS + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 + i2 }), nil
 
+	//Matches for "-" with one "INT_ARRAY"
+	case regexp.MustCompile("\\" + tokens.MINUS + objects.INT_ARRAY + "\\z").MatchString(functionInString):
+		return negative, nil
+
 	//Matches for "-" with one or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.MINUS + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 - i2 }), nil
 
-	//Matches for [ with zero or more "INT_ARRAY"
+	//Matches for "*" with one or more "INT_ARRAY"
+	case regexp.MustCompile("\\" + tokens.MULT + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 * i2 }), nil
+
+	//Matches for ":" with one or more "INT_ARRAY"
+	case regexp.MustCompile("\\" + tokens.DIV + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return arithmeticMulitpleIntArrays(func(i1, i2 int) int { return i1 / i2 }), nil
+
+	//Matches for ] with zero or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return appendIntArray, nil
 
-	//Matches for [ with zero or more "FUNCTION"
+	//Matches for ] with zero or more "FUNCTION"
 	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.FUNCTION + ")+").MatchString(functionInString):
 		return appendFunction, nil
 
