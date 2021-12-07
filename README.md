@@ -5,10 +5,10 @@
 ## - Write the rest of the documentation
 
 # PlusStack
-Plus Stack is a interpreted langue written in go.
+Plus Stack is a langue written in go.
 
 ## Memory in Plus Stack
-The only form of memory available in Plus Stack is a stack. The stack can contain two data types: Integer arrays and functions.
+The only form of memory available in Plus Stack is a stack. The stack can contain arrays, strings and functions.
 
 ## How source code is executed
 The interpreter reads the source code from left to right and ignores most whitespace. If the current symbol is recognized as an argument, the interpreter adds the current value to the list of arguments. If the current token is recognized as a function the interpreter executes the function with the list of arguments.
@@ -17,10 +17,10 @@ Here is a code example:
 ```
 10 30 +
 ```
-When running this code the interpreter will first add 10 and 30 to the list of arguments. Secondly, it will execute the plus function with 10 and 30 as arguments. The result will be the integer array [ 40 ]. Finally, the result will then be pushed to the memory stack.
+When running this code the interpreter will first add 10 and 30 to the list of arguments. Secondly, it will execute the plus function with 10 and 30 as arguments. The result will be the array [ 40 ]. Finally, the result will then be pushed to the memory stack.
 
 ## Popping the stack
-There are two tokens that pop the stack: "A" and ".". The first poping token, "A", popes all elements in the stack, and "." popes one. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the poped item will be added to the list of arguments. The A token will always be read as an argument and will therefore be added to the list of arguments.
+There are two tokens that pop the stack: "A" and ".". The first pooping token, "A", popes all elements in the stack, and "." popes one. The single popper can be both a argument and a function. If the element at the top of the stack is a function, the function will be executed, and if the element is an argument the popped item will be added to the list of arguments. The A token will always be read as an argument and will therefore be added to the list of arguments.
 
 Here is an example 
 ```
@@ -32,7 +32,7 @@ Firstly 30 will be added to the list of arguments. Then the element at the top o
 In Plus Stack functions can also be used as arguments.
 
 ### The execution of custom functions
-The arguments passed to the custom function will be added
+The arguments passed to the custom function will be added to the memory
 
 ## Function definitions
 ### Push ]

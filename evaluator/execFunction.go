@@ -50,6 +50,12 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 	case regexp.MustCompile("\\" + tokens.DIV + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return arithmeticMultipleIntArrays(func(i1, i2 float64) float64 { return i1 / i2 }), nil
 
+	case regexp.MustCompile("\\A" + tokens.EQUAL + ".+").MatchString(functionInString):
+		return equal, nil
+
+	case regexp.MustCompile("\\" + tokens.NOT + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return not, nil
+
 	//Matches for ] with zero or more "INT_ARRAY"
 	case regexp.MustCompile("\\" + tokens.APPEND + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
 		return appendIntArray, nil
@@ -79,6 +85,18 @@ func getFunctionDefintion(function, arguments string) (func([]objects.Object) ([
 
 	case regexp.MustCompile("\\" + tokens.MAP + "(" + objects.INT_ARRAY + ")+" + objects.FUNCTION).MatchString(functionInString):
 		return mapFunction, nil
+
+	case regexp.MustCompile("\\" + tokens.LESS_THEN + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return comperasion(func(a, b float64) bool { return a < b }), nil
+
+	case regexp.MustCompile("\\" + tokens.GREATER_THEN + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return comperasion(func(a, b float64) bool { return a > b }), nil
+
+	case regexp.MustCompile("\\" + tokens.EQUAL_OR_LESS_THEN + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return comperasion(func(a, b float64) bool { return a <= b }), nil
+
+	case regexp.MustCompile("\\" + tokens.EQUAL_OR_GREATER_THEN + "(" + objects.INT_ARRAY + ")+").MatchString(functionInString):
+		return comperasion(func(a, b float64) bool { return a >= b }), nil
 	}
 
 	return nilFunction, errors.New("Function " + function + " is not defined for arguments given: " + arguments)

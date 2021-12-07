@@ -42,6 +42,24 @@ func (l *Lexer) NextToken() tokens.Token {
 	case l.tokenIs(tokens.DIV):
 		tok = l.newToken(tokens.DIV, tokens.DIV, tokens.FUNCTION)
 		break
+	case l.tokenIs(tokens.EQUAL_OR_GREATER_THEN):
+		tok = l.newToken(tokens.EQUAL_OR_GREATER_THEN, tokens.EQUAL_OR_GREATER_THEN, tokens.FUNCTION)
+		break
+	case l.tokenIs(tokens.EQUAL_OR_LESS_THEN):
+		tok = l.newToken(tokens.EQUAL_OR_LESS_THEN, tokens.EQUAL_OR_LESS_THEN, tokens.FUNCTION)
+		break
+	case l.tokenIs(tokens.LESS_THEN):
+		tok = l.newToken(tokens.LESS_THEN, tokens.LESS_THEN, tokens.FUNCTION)
+		break
+	case l.tokenIs(tokens.GREATER_THEN):
+		tok = l.newToken(tokens.GREATER_THEN, tokens.GREATER_THEN, tokens.FUNCTION)
+		break
+	case l.tokenIs(tokens.NOT):
+		tok = l.newToken(tokens.NOT, tokens.NOT, tokens.FUNCTION)
+		break
+	case l.tokenIs(tokens.EQUAL):
+		tok = l.newToken(tokens.EQUAL, tokens.EQUAL, tokens.FUNCTION)
+		break
 	case l.tokenIs(tokens.APPEND):
 		tok = l.newToken(tokens.APPEND, tokens.APPEND, tokens.FUNCTION)
 		break
